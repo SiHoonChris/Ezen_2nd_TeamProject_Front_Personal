@@ -1,66 +1,91 @@
-<!-- 카테고리 대분류, 중분류 내용 필요 -->
 <template>
-  <div class="aboutProduct">
-    <div class="inner-product">
-      <div class="img-box">
-        <img id="productImage" :src="this.productInfo.image" :alt="this.productInfo.pno">
-      </div>
-      <div class="product-info">
-        <div class="product-title">{{this.productInfo.product_name}}</div>
-        <div class="explan_product product_info_section">
-          <h4 class="title-box font-mss">
-            Product Info
-            <span class="korSub">&nbsp;<font size="2">제품정보</font></span>
-          </h4>
-          <ul class="product_article">
-            <li>
-              <p class="product_article_tit">품번</p>
-              <p class="product_article_contents">
-                <strong>{{this.productInfo.pno}}</strong>
-              </p>
-            </li>
-          </ul>
-            </div>
-            <div class="explan_product price_info_section">
-               <h4 class="title-box font-mss">
-                  Price Info
-                  <span class="korSub">&nbsp;<font size="2">가격정보</font></span>
-               </h4>
-               <ul class="product_article">
-                  <li class="box_info_products">
-                     <p class="product_article_tit">IGSJ 판매가</p>
-                     <p class="product_article_contents">
-                        <span class="product_article_price" id="goods_price">
-                           <span class="prouct-price">{{Number(this.productInfo.product_price).toLocaleString()}}원</span>
-                        </span>
-                     </p>
-                  </li>
-               </ul>
-            </div>
-            <div class="option-box">
-              <select v-model="size">
-                <option value="">옵션 선택</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="2XL">2XL</option> 
-              </select>
-            </div>
-            <div class="count-check" v-if="this.size!==''">
-              <span>{{this.size}}</span>
-              <input type="number" min="1" :max="this.productInfo.product_stock" v-model.number="count"/>
-            </div>
-            <div class="sum-total-price">
-              <span>총 상품 금액</span>
-              <span>{{totalPrice}}원</span>
-            </div>
-            <div class="btn-box">
-               <button class="purchase"><b>바로구매</b></button>
-               <button class="cart"><b>장바구니</b></button>
-            </div>
-         </div>
-      </div>
+  <div style="display:block;">
+    <p class="show_categories">
+      <span>
+        <router-link to="/">IGSJ 스토어</router-link>
+      </span>
+      <span>
+        <router-link to="#">
+          대분류
+        </router-link>
+      </span>
+      <span>
+        <router-link to="#">
+          중분류
+        </router-link>
+      </span>
+    </p>
+    <div class="aboutProduct">
+      <div class="inner-product">
+        <div class="img-box">
+          <img id="productImage" :src="this.productInfo.image" :alt="this.productInfo.pno">
+        </div>
+        <div class="product-info">
+          <div class="product-title">{{this.productInfo.product_name}}</div>
+          <div class="explan_product product_info_section">
+            <h4 class="title-box font-mss">
+              Product Info
+              <span class="korSub">&nbsp;<font size="2">제품정보</font></span>
+            </h4>
+            <ul class="product_article">
+              <li>
+                <p class="product_article_tit">품번</p>
+                <p class="product_article_contents">
+                  <strong>{{this.productInfo.pno}}</strong>
+                </p>
+              </li>
+            </ul>
+              </div>
+              <div class="explan_product price_info_section">
+                <h4 class="title-box font-mss">
+                    Price Info
+                    <span class="korSub">&nbsp;<font size="2">가격정보</font></span>
+                </h4>
+                <ul class="product_article">
+                    <li class="box_info_products">
+                      <p class="product_article_tit">IGSJ 판매가</p>
+                      <p class="product_article_contents">
+                          <span class="product_article_price" id="goods_price">
+                            <span class="prouct-price">{{Number(this.productInfo.product_price).toLocaleString()}}원</span>
+                          </span>
+                      </p>
+                    </li>
+                </ul>
+              </div>
+              <div class="option-box">
+                <select v-model="size">
+                  <option value="">옵션 선택</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                  <option value="2XL">2XL</option> 
+                </select>
+              </div>
+              <div class="count-check" v-if="this.size!==''">
+                <span>{{this.size}}</span>
+                <input type="number" min="1" :max="this.productInfo.product_stock" v-model.number="count"/>
+              </div>
+              <div class="sum-total-price">
+                <span>총 상품 금액</span>
+                <span>{{totalPrice}}원</span>
+              </div>
+              <div class="btn-box">
+                <button class="purchase"><b>바로구매</b></button>
+                <button class="cart"><b>장바구니</b></button>
+              </div>
+          </div>
+        </div>
+    </div>
+    <hr>
+    <div class="info_detail">
+      <h4 class="title-box font-mss">
+        Info
+        <span class="korSub">&nbsp;<font size="2">정보</font></span>
+      </h4>
+      <img :src="this.productInfo.image" :alt="this.productInfo.pno" style="width: 100%;" >
+      <!-- 상품 정보 이미지는 추후에 작업 예정 -->
+    </div>
   </div>
 </template>
 
@@ -106,15 +131,37 @@ export default {
     font-family: 'Noto Sans', sans-serif;
     font-family: 'Noto Sans KR', sans-serif;
   }
-  .aboutProduct {
-    display: flex;
-    justify-content: left;
-    padding-left: 30px;
+  .show_categories {
+    border-bottom: 1px solid darkgrey;
+    padding: 6px 0;
+    margin: 0;
+  }
+  .show_categories span {
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .show_categories span::after {
+    content: ' > ';
+    font-weight: 100;
+  }
+  .show_categories span:first-child {
+    margin-left: 10px;
+  }
+  .show_categories span:last-child::after {
+    content: '';
+  }
+  .show_categories a {
+    text-decoration: none;
+    color: black;
+  }
+  .show_categories a:hover {
+    text-decoration: underline;
   }
   .inner-product {
     display: flex;
     padding: 20px;
     align-items: center;
+    height: 100%;
   }
   .img-box {
     display : flex;
@@ -226,5 +273,13 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
-              
+  hr {
+    margin: 20px 0;
+    color:grey;
+  }
+  .info_detail {
+    width: 736px;
+    margin-left: 50px;
+    margin-bottom: 50px;
+  }           
 </style>
