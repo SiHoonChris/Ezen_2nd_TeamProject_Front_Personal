@@ -1,5 +1,5 @@
 <template>
-  <div style="display:block;">
+  <div>
     <p class="show_categories">
       <span>
         <router-link to="/">IGSJ 스토어</router-link>
@@ -27,7 +27,7 @@
               Product Info
               <span class="korSub">&nbsp;<font size="2">제품정보</font></span>
             </h4>
-            <ul class="product_article">
+            <ul class="product_article" style="border-bottom:1px solid lightgrey;">
               <li>
                 <p class="product_article_tit">품번</p>
                 <p class="product_article_contents">
@@ -35,47 +35,85 @@
                 </p>
               </li>
             </ul>
-              </div>
-              <div class="explan_product price_info_section">
-                <h4 class="title-box font-mss">
-                    Price Info
-                    <span class="korSub">&nbsp;<font size="2">가격정보</font></span>
-                </h4>
-                <ul class="product_article">
-                    <li class="box_info_products">
-                      <p class="product_article_tit">IGSJ 판매가</p>
-                      <p class="product_article_contents">
-                          <span class="product_article_price" id="goods_price">
-                            <span class="prouct-price">{{Number(this.productInfo.product_price).toLocaleString()}}원</span>
-                          </span>
-                      </p>
-                    </li>
-                </ul>
-              </div>
-              <div class="option-box">
-                <select v-model="size">
-                  <option value="">옵션 선택</option>
-                  <option value="S">S</option>
-                  <option value="M">M</option>
-                  <option value="L">L</option>
-                  <option value="XL">XL</option>
-                  <option value="2XL">2XL</option> 
-                </select>
-              </div>
-              <div class="count-check" v-if="this.size!==''">
-                <span>{{this.size}}</span>
-                <input type="number" min="1" :max="this.productInfo.product_stock" v-model.number="count"/>
-              </div>
-              <div class="sum-total-price">
-                <span>총 상품 금액</span>
-                <span>{{totalPrice}}원</span>
-              </div>
-              <div class="btn-box">
-                <button class="purchase"><b>바로구매</b></button>
-                <button class="cart"><b>장바구니</b></button>
-              </div>
           </div>
+          <div class="explan_product price_info_section">
+            <h4 class="title-box font-mss">
+              Price Info
+              <span class="korSub">&nbsp;<font size="2">가격정보</font></span>
+            </h4>
+            <ul class="product_article" style="border-bottom:1px solid lightgrey;">
+              <li class="box_info_products">
+                <p class="product_article_tit">IGSJ 판매가</p>
+                <p class="product_article_contents">
+                  <span class="product_article_price" id="goods_price">
+                    <span class="product-price">{{Number(this.productInfo.product_price).toLocaleString()}}원</span>
+                  </span>
+                </p>
+              </li>
+            </ul>
+          </div>
+          <div class="explan_product product_info_section">
+            <h4 class="title-box font-mss">
+              Delivery Info
+              <span class="korSub">&nbsp;<font size="2">배송정보</font></span>
+            </h4>
+            <ul class="product_article" style="border-bottom:1px solid lightgrey;">
+              <li>
+                <p class="product_article_tit">
+                  출고 정보
+                  <span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                      <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+                    </svg>
+                  </span>
+                </p>
+                <p class="product_article_contents">
+                  <strong>결제 3일 이내 출고</strong>
+                </p>
+              </li>
+              <li>
+                <p class="product_article_tit">배송 정보</p>
+                <p class="product_article_contents">
+                  <strong>국내 배송 / 입점사 배송 / CJ대한통운</strong>
+                </p>
+              </li>
+            </ul>
+          </div>
+          <div class="order-area" style="display:block; height:100%;">
+            <div class="option-box">
+              <select v-model="size">
+                <option value="">옵션 선택</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="2XL">2XL</option> 
+              </select>
+            </div>
+            <div class="count-check" v-if="this.size!==''">
+              <span style="width:45%;">{{this.size}}</span>
+              <span style="width:20%;">
+                <input type="number" min="1" :max="this.productInfo.product_stock" v-model.number="count"/>
+              </span>
+              <span style="font-size:14px; width:30%; text-align:right; color:darkgrey; font-weight:bold;">{{totalPrice}}원</span>
+              <span style="width:5%; cursor:pointer;" @click="removeCount">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="grey" class="bi bi-x" viewBox="0 0 16 16">
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+              </span>
+            </div>
+            <div class="sum-total-price">
+              <span>총 상품 금액</span>
+              <span>{{totalPrice}}원</span>
+            </div>
+            <div class="btn-box">
+              <button class="purchase"><b>바로구매</b></button>
+              <button class="cart"><b>장바구니</b></button>
+            </div>
+          </div>  
         </div>
+      </div>
     </div>
     <hr>
     <div class="info_detail">
@@ -83,7 +121,7 @@
         Info
         <span class="korSub">&nbsp;<font size="2">정보</font></span>
       </h4>
-      <img :src="this.productInfo.image" :alt="this.productInfo.pno" style="width: 100%;" >
+      <img :src="this.productInfo.image" :alt="this.productInfo.pno" style="width: 100%;">
       <!-- 상품 정보 이미지는 추후에 작업 예정 -->
     </div>
   </div>
@@ -119,6 +157,9 @@ export default {
           alert('Error')
         }
       })
+    },
+    removeCount(){
+      document.querySelector('.count-check').style.display="none"
     }
   }
 }
@@ -160,7 +201,7 @@ export default {
   .inner-product {
     display: flex;
     padding: 20px;
-    align-items: center;
+    align-items: flex-start;
     height: 100%;
   }
   .img-box {
@@ -171,6 +212,7 @@ export default {
     min-width: 350px;
     height: 450px;
     border: 1px solid #bebebe;
+    margin-top: 10px;
   }
   #productImage {
     border: 1px solid #e9e9e9;
@@ -178,9 +220,9 @@ export default {
     height: 425px;
   }
   .product-info {
-    width: 350px;
-    min-width: 350px;
-    height: 450px;
+    width: 380px;
+    min-width: 380px;
+    height: 100%;
     margin: 0px;
     margin-left: 36px;
   }
@@ -211,6 +253,7 @@ export default {
     height: 50px;
     display: flex;
     justify-content: space-between;
+    margin-top: 16px;
   }
   .purchase {
     width: 70%;
@@ -241,7 +284,7 @@ export default {
     align-items: center;
   }
   .option-box select{
-    width:310px;
+    width:90%;
     text-align:left;
   }
   .count-check {
@@ -254,10 +297,6 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  .count-check span {
-    width:70px;
-    text-align:center;
   }
   .count-check input {
     width:60px;
@@ -272,6 +311,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: bold;
   }
   hr {
     margin: 20px 0;
