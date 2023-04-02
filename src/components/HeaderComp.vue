@@ -43,7 +43,7 @@
       <router-link to="#">장바구니</router-link>
       <router-link to="#">주문배송조회</router-link>
       <router-link to="#">고객센터</router-link>
-      <div v-if="this.$store.state.idConfirmed===true" @click="this.$store.commit('signOut')">로그아웃</div>
+      <div v-if="this.$store.state.idConfirmed===true" @click="logout">로그아웃</div>
     </nav>
   </header>
 </template>
@@ -74,6 +74,10 @@ export default {
     searchProducts(){
       if(this.toSearch==='' || this.toSearch.length===0) {alert('검색어를 입력하세요.')}
       else {this.$router.push({name: 'search', params: {typed: this.toSearch}})}
+    },
+    logout(){
+      this.$store.commit('signOut')
+      this.$router.replace('/')
     }
   }
 }

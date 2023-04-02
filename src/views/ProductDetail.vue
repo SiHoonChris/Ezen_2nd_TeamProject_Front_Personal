@@ -61,7 +61,8 @@
               <li>
                 <p class="product_article_tit">
                   출고 정보
-                  <span>
+                  <span style="border: none; padding: 0;" data-bs-toggle="tooltip" data-bs-placement="bottom" 
+                   title="판매자가 설정한 정보로, 업체 및 상품상황에 따라 변경될 수 있습니다. 주말, 공휴일 및 업체 휴무일 제외한 평일(영업일) 기준 일자 입니다.">  
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
                       <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                       <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
@@ -92,12 +93,12 @@
               </select>
             </div>
             <div class="count-check" v-if="this.size!==''">
-              <span style="width:45%;">{{this.size}}</span>
-              <span style="width:20%;">
+              <span class="count-check-size">{{this.size}}</span>
+              <span class="count-check-count">
                 <input type="number" min="1" :max="this.productInfo.product_stock" v-model.number="count"/>
               </span>
-              <span style="font-size:14px; width:30%; text-align:right; color:darkgrey; font-weight:bold;">{{totalPrice}}원</span>
-              <span style="width:5%; cursor:pointer;" @click="removeCount">
+              <span class="count-check-sum">{{totalPrice}}원</span>
+              <span class="count-check-delete" @click="removeCount">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="grey" class="bi bi-x" viewBox="0 0 16 16">
                   <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
                 </svg>
@@ -128,6 +129,7 @@
 </template>
 
 <script>
+import {Tooltip} from 'bootstrap'
 export default {
   data() {
     return {
@@ -140,6 +142,9 @@ export default {
   created(){
     this.pno = this.$route.params.pno
     this.fn_productInfo(this.pno)
+  },
+  mounted(){
+    new Tooltip(document.body, {selector: "[data-bs-toggle='tooltip']"})
   },
   computed: {
     totalPrice() {
@@ -208,16 +213,16 @@ export default {
     display : flex;
     align-items : center;
     justify-content : center;
-    width: 350px;
-    min-width: 350px;
-    height: 450px;
+    width: 490px;
+    min-width: 490px;
+    height: 630px;
     border: 1px solid #bebebe;
     margin-top: 10px;
   }
   #productImage {
     border: 1px solid #e9e9e9;
-    width: 325px;
-    height: 425px;
+    width: 455px;
+    height: 595px;
   }
   .product-info {
     width: 380px;
@@ -317,9 +322,26 @@ export default {
     margin: 20px 0;
     color:grey;
   }
+  .count-check-size {
+    width: 45%;
+  }
+  .count-check-count {
+    width: 20%;
+  }
+  .count-check-sum {
+    font-size: 14px;
+    width: 30%;
+    text-align:right;
+    color: darkgrey;
+    font-weight: bold;
+  }
+  .count-check-delete {
+    width: 5%;
+    cursor: pointer;
+  }
   .info_detail {
-    width: 736px;
-    margin-left: 50px;
+    width: 906px;
+    margin-left: 20px;
     margin-bottom: 50px;
   }           
 </style>
