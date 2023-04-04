@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MainComp from '../components/MainComp.vue'
+import MainComp from '../views/MainComp.vue'
 
 const routes = [
   { path: '/',                      name: 'home',    component: MainComp                                   },
