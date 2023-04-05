@@ -16,7 +16,7 @@
           <a href="#">아이디 찾기</a>
           <a href="#">비밀번호 찾기</a>
         </div>
-        <button class="KAKAO_login-btn">카카오 로그인</button>
+        <button class="KAKAO_login-btn" @click="KakaoLogin">카카오 로그인</button>
       </div>
       <div class="non-member" v-if="this.guestActivate">
         <span>주문자명</span>
@@ -86,6 +86,11 @@ export default {
     forGuest(){
       this.memberActivate = false
       this.guestActivate = true
+    },
+    KakaoLogin() {
+      window.Kakao.Auth.authorize({
+        redirectUri: 'http://localhost:8086/member/KAKAOlogin'
+      })
     }
   },
   directives: {
