@@ -93,7 +93,7 @@
               <span class="count-check-count">
                 <input type="number" min="1" :max="this.productInfo.product_stock" v-model.number="count"/>
               </span>
-              <span class="count-check-sum">{{pricePerOption}}</span>
+              <span class="count-check-sum">{{pricePerOption}}원</span>
               <span class="count-check-delete">
                 <svg :name="sz" @click="removeCount" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="grey"  viewBox="0 0 16 16">
                   <path :name="sz" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
@@ -102,7 +102,7 @@
             </div>
             <div class="sum-total-price">
               <span>총 상품 금액</span>
-              <span>{{totalSum}}원</span>
+              <span>{{Number(totalSum).toLocaleString()}}원</span>
             </div>
             <div class="btn-box">
               <button class="purchase"><b>바로구매</b></button>
@@ -119,7 +119,6 @@
         <span class="korSub">&nbsp;<font size="2">정보</font></span>
       </h4>
       <img :src="this.productInfo.image" :alt="this.productInfo.pno" style="width: 100%;">
-      <!-- 상품 정보 이미지는 추후에 작업 예정 -->
     </div>
   </div>
 </template>
@@ -131,12 +130,12 @@ export default {
   data() {
     return {
       pno:'',
-      midLvCatArr: {},
-      productInfo: {},
+      midLvCatArr: [{big_ctg:'대분류명', category_level:'대분류', category_name:'중분류명', cno:'중분류'}],
+      productInfo: {pno:0, cno:0, product_name:'상품명', product_price:0, product_stock:0, image:'사진'},
       size: '',
       sizeArr: ['S', 'M', 'L', 'XL', '2XL'],
       count: 1,
-      totalSum: ''
+      totalSum: 0
     }
   },
   created(){
@@ -150,15 +149,20 @@ export default {
   watch: {
     size: function(val){
       document.getElementById(val).style.display="flex"
+      this.count=1
+    },
+    count: function(val){
+      if(val) {
+        const perProd = document.querySelectorAll(".count-check-count input")
+        let sumCnt=0
+        for(let i=0; i<perProd.length; i++){sumCnt += Number(perProd[i].value)}
+        this.totalSum = this.productInfo.product_price*sumCnt
+      }
     }
   },
   computed: {
     pricePerOption() {
       return (this.productInfo.product_price * this.count).toLocaleString()
-    },
-    totalSum() {
-      let sum = this.productInfo.product_price
-      return sum.toLocaleString()
     }
   },
   methods: {
@@ -175,6 +179,7 @@ export default {
       this.$axios.get(this.$serverUrl + '/product/detail?pno=' + pno)
       .then((res) => {
         this.productInfo = res.data
+        this.totalSum = this.productInfo.product_price
         this.fn_CategoryDetails(this.productInfo.cno)
       })
       .catch((err) => {
