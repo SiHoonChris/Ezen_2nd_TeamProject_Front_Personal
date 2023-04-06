@@ -28,7 +28,6 @@
       <div class="signup">
         <span>가입만 해도 즉시 15% 할인</span>
         <button class="signup-btn"><a href="http://localhost:8086/member/memberSignUp">회원가입</a></button>
-        <!-- 회원가입 페이지는 http://localhost:8086/ 에서 JSP로 제작 -->
       </div>
     </div>
   </div>
@@ -46,6 +45,9 @@ export default {
   },
   created(){
     this.$store.commit('setUrl', window.location.href)
+    if(window.location.href.includes('?code=')) {
+      this.infosFromKAKAO(window.location.href.replace('8080/login','8086/member/kakao-login'))
+    }
   },
   methods : {
     memberLogin(){
@@ -88,8 +90,17 @@ export default {
       this.guestActivate = true
     },
     KakaoLogin() {
-      window.Kakao.Auth.authorize({
-        redirectUri: 'http://localhost:8086/member/KAKAOlogin'
+      window.Kakao.Auth.authorize({redirectUri: 'http://localhost:8080/login'})
+    },               
+    infosFromKAKAO(code){
+      this.$axios.get(code)
+      .then((res)=>{
+        this.$store.commit('signIn', res.data)
+        this.$router.replace('/')
+      }).catch((err) => {
+        if (err.message.indexOf('Network Error') > -1) {
+          alert('KAKAO Error')
+        }
       })
     }
   },
