@@ -44,7 +44,6 @@ export default {
     }
   },
   created(){
-    this.$store.commit('setUrl', window.location.href)
     if(window.location.href.includes('?code=')) {
       this.infosFromKAKAO(window.location.href.replace('8080/login','8086/member/kakao-login'))
     }

@@ -91,9 +91,9 @@
             <div :key='i' v-for="(sz, i) in sizeArr" :id="sz" class="count-check" style="display:none;">
               <span class="count-check-size">{{sz}}</span>
               <span class="count-check-count">
-                <input type="number" min="1" :max="this.productInfo.product_stock" v-model.number="count"/>
+                <input type="number" min="1" :max="this.productInfo.product_stock" v-model.number="count[sz]"/>
               </span>
-              <span class="count-check-sum">{{pricePerOption}}원</span>
+              <span class="count-check-sum">{{Number(this.productInfo.product_price*count[sz]).toLocaleString()}}</span>
               <span class="count-check-delete">
                 <svg :name="sz" @click="removeCount" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="grey"  viewBox="0 0 16 16">
                   <path :name="sz" d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
@@ -102,11 +102,16 @@
             </div>
             <div class="sum-total-price">
               <span>총 상품 금액</span>
-              <span>{{Number(totalSum).toLocaleString()}}원</span>
+              <span>
+                {{Object.values(this.count).reduce((a, b) => a + b, 0)===0 ? 
+                  Number(this.productInfo.product_price).toLocaleString() : 
+                  Number(Object.values(this.count).reduce((a, b) => a + b, 0) * this.productInfo.product_price).toLocaleString()
+                }}원
+              </span>
             </div>
             <div class="btn-box">
-              <button class="purchase"><b>바로구매</b></button>
-              <button class="cart"><b>장바구니</b></button>
+              <button class="purchase" @click="toPurchase">바로구매</button>
+              <button class="cart" @click="toCart">장바구니</button>
             </div>
           </div>  
         </div>
@@ -134,12 +139,10 @@ export default {
       productInfo: {pno:0, cno:0, product_name:'상품명', product_price:0, product_stock:0, image:'사진'},
       size: '',
       sizeArr: ['S', 'M', 'L', 'XL', '2XL'],
-      count: 1,
-      totalSum: 0
+      count: {'S':0, 'M':0, 'L':0, 'XL':0, '2XL':0}
     }
   },
   created(){
-    this.$store.commit('setUrl', window.location.href)
     this.pno = this.$route.params.pno
     this.fn_productInfo(this.pno)
   },
@@ -149,20 +152,7 @@ export default {
   watch: {
     size: function(val){
       document.getElementById(val).style.display="flex"
-      this.count=1
-    },
-    count: function(val){
-      if(val) {
-        const perProd = document.querySelectorAll(".count-check-count input")
-        let sumCnt=0
-        for(let i=0; i<perProd.length; i++){sumCnt += Number(perProd[i].value)}
-        this.totalSum = this.productInfo.product_price*sumCnt
-      }
-    }
-  },
-  computed: {
-    pricePerOption() {
-      return (this.productInfo.product_price * this.count).toLocaleString()
+      this.count[val]=1
     }
   },
   methods: {
@@ -179,7 +169,6 @@ export default {
       this.$axios.get(this.$serverUrl + '/product/detail?pno=' + pno)
       .then((res) => {
         this.productInfo = res.data
-        this.totalSum = this.productInfo.product_price
         this.fn_CategoryDetails(this.productInfo.cno)
       })
       .catch((err) => {
@@ -189,10 +178,36 @@ export default {
       })
     },
     removeCount(evt){
-      if(evt.target.getAttribute("name")===null) return false
+      if(evt.target.getAttribute("name")===null) {return false}
       else {
         document.getElementById(evt.target.getAttribute("name")).style.display="none"
-        this.count=1
+        this.count[evt.target.getAttribute("name")]=0
+      }
+    },
+    toPurchase(){
+      alert('준비 중')
+    },
+    toCart(){
+      if(Object.values(this.count).reduce((a, b) => a + b, 0)===0) {
+        alert('사이즈/수량을 선택해주세요')
+      }
+      else if(this.$store.state.idConfirmed === false) {
+        const toLoginPage = confirm("로그인 페이지로 이동할까요?")
+        if(toLoginPage) {this.$router.push("/login")} 
+      }
+      else {
+        this.$axios.post(this.$serverUrl + '/cart/cartWrite', {
+          userId: this.$store.state.userInfo.userId,
+          pno: this.productInfo.pno,
+          size: JSON.stringify(this.count)
+        }).then((res)=>{
+          res.data ? this.$router.push("/cart") : alert("Cart-banned")
+        })
+        .catch((err) => {
+          if (err.message.indexOf('Network Error') > -1) {
+            alert('Cart Error')
+          }
+        })
       }
     }
   }
@@ -375,5 +390,8 @@ export default {
     width: 906px;
     margin-left: 20px;
     margin-bottom: 50px;
-  }           
+  }
+  .purchase, .cart{
+    font-weight: bold;
+  }     
 </style>
